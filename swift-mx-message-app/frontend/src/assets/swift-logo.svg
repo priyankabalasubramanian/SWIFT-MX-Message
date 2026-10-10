@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#bgGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="38" fill="none" stroke="url(#primaryGrad)" stroke-width="2" stroke-dasharray="4 4" opacity="0.4"/>
+  <path d="M34 76 L52 36 L66 36 L48 76 Z" fill="url(#primaryGrad)" filter="url(#glow)"/>
+  <path d="M56 76 L74 36 L88 36 L70 76 Z" fill="#38bdf8"/>
+  <circle cx="86" cy="72" r="5" fill="#a855f7"/>
+</svg>

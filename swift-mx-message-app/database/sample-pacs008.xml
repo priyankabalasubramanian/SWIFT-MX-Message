@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SWIFT MX Message Payload (ISO 20022 Demonstration)
+  Type: pacs.008.001.08 - Financial Institution to Customer Credit Transfer
+  Notice: Generated for demonstration and schema testing.
+-->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <FIToFICstmrCdtTrf>
+    <GrpHdr>
+      <MsgId>MSG-2026-00189</MsgId>
+      <CreDtTm>2026-10-10T12:00:00Z</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <SttlmInf>
+        <SttlmMtd>CLRG</SttlmMtd>
+      </SttlmInf>
+      <InstgAgt>
+        <FinInstnId>
+          <BICFI>SCBLUS33XXX</BICFI>
+          <Nm>Standard Commercial Bank New York</Nm>
+        </FinInstnId>
+      </InstgAgt>
+      <InstdAgt>
+        <FinInstnId>
+          <BICFI>EMBKDEFFXXX</BICFI>
+          <Nm>European Mercantile Bank Frankfurt</Nm>
+        </FinInstnId>
+      </InstdAgt>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId>
+        <EndToEndId>MSG-2026-00189-E2E</EndToEndId>
+        <TxId>MSG-2026-00189-TX01</TxId>
+      </PmtId>
+      <IntrBkSttlmAmt Ccy="USD">50000.00</IntrBkSttlmAmt>
+      <IntrBkSttlmDt>2026-10-10</IntrBkSttlmDt>
+      <Dbtr>
+        <Nm>Global Tech Solutions Corp</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <IBAN>US36SCBL12345678901234</IBAN>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>SCBLUS33XXX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtrAgt>
+        <FinInstnId>
+          <BICFI>EMBKDEFFXXX</BICFI>
+        </FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <Nm>Apex Industrial Supplies GmbH</Nm>
+      </Cdtr>
+      <CdtrAcct>
+        <Id>
+          <IBAN>DE89370400440532013000</IBAN>
+        </Id>
+      </CdtrAcct>
+      <RmtInf>
+        <Ustrd>INV-2026-9041 Commercial Settlement</Ustrd>
+      </RmtInf>
+    </CdtTrfTxInf>
+  </FIToFICstmrCdtTrf>
+</Document>

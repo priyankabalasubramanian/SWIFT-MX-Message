@@ -1,0 +1,60 @@
+:root {
+  /* Warm Institutional Palette */
+  --color-bg-base: #F7F3EC;          /* Warm soft cream/ivory background */
+  --color-bg-surface: #FFFFFF;       /* Crisp white surface */
+  --color-bg-subtle: #F3ECE1;        /* Soft warm beige accent */
+  --color-bg-nude: #EAE3D5;          /* Warm neutral border/highlight */
+  
+  /* Deep Navy Brand Accents */
+  --color-navy-dark: #08162F;        /* Deepest institutional navy */
+  --color-navy: #0D234C;             /* Primary corporate navy */
+  --color-navy-hover: #15346B;       /* Active navy button hover */
+  --color-navy-active: #091936;      /* Pressed navy state */
+  --color-navy-tint: #EEF3FA;        /* Pale navy background tint */
+  
+  /* Typography & Neutrals */
+  --color-charcoal-dark: #191E28;    /* High-contrast primary charcoal */
+  --color-charcoal-body: #323A46;    /* Highly readable body text */
+  --color-charcoal-muted: #5F6B7A;   /* Muted secondary labels */
+  --color-border: #DED6C7;           /* Elegant beige card border */
+  --color-border-input: #CDC4B3;     /* Visible, tactile input border */
+  --color-border-focus: #0D234C;     /* Strong navy focus ring */
+  
+  /* Feedback Colors */
+  --color-error-text: #991B1B;       /* Deep readable crimson */
+  --color-error-bg: #FEF2F2;         /* Soft error background */
+  --color-error-border: #F87171;     /* Error border */
+  --color-success-text: #065F46;     /* Deep forest green */
+  --color-success-bg: #F0FDF4;       /* Soft success background */
+  --color-success-border: #A7F3D0;
+  
+  /* Elevation & Borders */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --shadow-subtle: 0 2px 12px rgba(13, 35, 76, 0.05), 0 1px 3px rgba(13, 35, 76, 0.03);
+  --shadow-card: 0 4px 24px rgba(13, 35, 76, 0.06), 0 1px 4px rgba(13, 35, 76, 0.04);
+  
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-base);
+  color: var(--color-charcoal-body);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
+}

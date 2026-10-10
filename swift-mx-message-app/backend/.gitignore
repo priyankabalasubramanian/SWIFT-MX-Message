@@ -1,0 +1,23 @@
+# Maven build outputs
+target/
+*.jar
+*.war
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Environment and sensitive local configurations
+.env
+.env.*
+application-local.properties
+application-dev.properties
+*.local
+
+# Logs
+logs/
+*.log

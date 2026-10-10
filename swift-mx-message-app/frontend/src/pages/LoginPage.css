@@ -1,0 +1,435 @@
+/* Institutional Banking Portal Styles */
+
+.portal-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-base);
+}
+
+/* Deep Navy Institutional Header */
+.portal-header {
+  background-color: var(--color-navy-dark);
+  color: #FFFFFF;
+  border-bottom: 2px solid var(--color-navy);
+  padding: 0.875rem 2rem;
+}
+
+.portal-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.portal-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.portal-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.banking-logo-svg {
+  flex-shrink: 0;
+  display: block;
+}
+
+.portal-brand-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.portal-brand-subtitle {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #D1D9E6;
+  letter-spacing: 0.02em;
+}
+
+.portal-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #CBD5E1;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+}
+
+.portal-header-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+  flex-shrink: 0;
+}
+
+.portal-header-status-text {
+  color: #E2E8F0;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+}
+
+/* Main Content Area */
+.portal-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.portal-card-container {
+  width: 100%;
+  max-width: 1040px;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  overflow: hidden;
+}
+
+/* Visual Side Panel */
+.portal-visual-panel {
+  position: relative;
+  background-color: var(--color-bg-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 520px;
+  border-right: 1px solid var(--color-border);
+}
+
+.portal-hero-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.portal-visual-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1.75rem 1.75rem;
+  background: linear-gradient(180deg, rgba(8, 22, 47, 0) 0%, rgba(8, 22, 47, 0.82) 50%, rgba(8, 22, 47, 0.94) 100%);
+  color: #FFFFFF;
+}
+
+.portal-visual-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #93C5FD;
+  margin-bottom: 0.35rem;
+}
+
+.portal-visual-headline {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #F8FAFC;
+}
+
+.portal-visual-caption {
+  font-size: 0.8rem;
+  color: #CBD5E1;
+  margin-top: 0.35rem;
+  line-height: 1.45;
+}
+
+/* Form Side Panel */
+.portal-form-panel {
+  padding: 3rem 2.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--color-bg-surface);
+}
+
+.form-header-group {
+  margin-bottom: 2rem;
+}
+
+.form-brand-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.form-brand-subtitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-charcoal-muted);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-charcoal-dark);
+  letter-spacing: 0.01em;
+}
+
+.field-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--color-charcoal-dark);
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-navy);
+  box-shadow: 0 0 0 3px rgba(13, 35, 76, 0.12);
+}
+
+.field-input.has-error {
+  border-color: var(--color-error-border);
+  background-color: var(--color-error-bg);
+}
+
+.field-input.has-error:focus {
+  border-color: var(--color-error-text);
+  box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.12);
+}
+
+/* Password Toggle Button */
+.password-toggle-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-charcoal-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--color-navy);
+  background-color: var(--color-navy-tint);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 1px;
+}
+
+.password-toggle-btn svg {
+  display: block;
+}
+
+.field-input-wrapper input[name="password"] {
+  padding-right: 2.75rem;
+}
+
+/* Inline Field Error */
+.field-error-msg {
+  font-size: 0.78rem;
+  color: var(--color-error-text);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Submit Action Button */
+.submit-login-btn {
+  background-color: var(--color-navy);
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--color-navy-dark);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+  margin-top: 0.5rem;
+}
+
+.submit-login-btn:hover {
+  background-color: var(--color-navy-hover);
+}
+
+.submit-login-btn:active {
+  background-color: var(--color-navy-active);
+  transform: translateY(1px);
+}
+
+.submit-login-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 35, 76, 0.25);
+}
+
+/* Compliance Notice */
+.portal-compliance-notice {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: 0.75rem;
+  color: var(--color-charcoal-muted);
+  line-height: 1.45;
+}
+
+/* Authenticated Session State View */
+.portal-authenticated-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  color: var(--color-success-text);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.auth-details-box {
+  background-color: var(--color-bg-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+}
+
+.auth-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  font-size: 0.85rem;
+}
+
+.auth-info-label {
+  color: var(--color-charcoal-muted);
+}
+
+.auth-info-value {
+  color: var(--color-charcoal-dark);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.sign-out-btn {
+  background-color: transparent;
+  color: var(--color-navy);
+  border: 1px solid var(--color-border-input);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sign-out-btn:hover {
+  background-color: var(--color-navy-tint);
+  border-color: var(--color-navy);
+}
+
+/* Portal Footer */
+.portal-footer {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  font-size: 0.78rem;
+  color: var(--color-charcoal-muted);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-subtle);
+}
+
+/* Responsive Media Queries */
+@media (max-width: 860px) {
+  .portal-card-container {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+
+  .portal-visual-panel {
+    min-height: 220px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .portal-visual-overlay {
+    padding: 1.25rem;
+  }
+
+  .portal-form-panel {
+    padding: 2rem 1.75rem;
+  }
+
+  .portal-header {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-main {
+    padding: 1.5rem 1rem;
+  }
+
+  .portal-form-panel {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .portal-header-badge {
+    display: none;
+  }
+}
