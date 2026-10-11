@@ -92,17 +92,19 @@ export const api = {
     return res;
   },
 
-  googleLogin: async (idToken) => {
-    const res = await apiRequest('/auth/google', {
+  register: async (fullName, email, password) => {
+    const trimmedEmail = email ? email.trim() : '';
+    const trimmedName = fullName ? fullName.trim() : '';
+    const res = await apiRequest('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ idToken })
+      body: JSON.stringify({ fullName: trimmedName, email: trimmedEmail, password })
     });
     if (res && res.token) {
       authStorage.setToken(res.token);
       authStorage.setUser({
-        email: res.email || res.username,
-        username: res.username || res.email,
-        fullName: res.fullName,
+        email: res.email || trimmedEmail,
+        username: res.username || res.email || trimmedEmail,
+        fullName: res.fullName || trimmedName,
         role: res.role
       });
     }

@@ -1,11 +1,12 @@
 package com.swiftmx.app.controller;
 
 import com.swiftmx.app.dto.ApiResponse;
-import com.swiftmx.app.dto.GoogleLoginRequest;
 import com.swiftmx.app.dto.LoginRequest;
 import com.swiftmx.app.dto.LoginResponse;
+import com.swiftmx.app.dto.RegisterRequest;
 import com.swiftmx.app.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +26,10 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/google")
-    public ResponseEntity<LoginResponse> googleLogin(@Valid @RequestBody GoogleLoginRequest request) {
-        LoginResponse response = authService.authenticateWithGoogle(request.getIdToken());
-        return ResponseEntity.ok(response);
+    @PostMapping("/register")
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        LoginResponse response = authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/logout")

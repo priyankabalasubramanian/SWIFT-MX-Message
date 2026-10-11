@@ -34,9 +34,6 @@ class AuthServiceTest {
     @Mock
     private JwtTokenProvider jwtTokenProvider;
 
-    @Mock
-    private GoogleTokenVerifierService googleTokenVerifierService;
-
     @InjectMocks
     private AuthService authService;
 
@@ -94,58 +91,39 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("Should successfully authenticate existing user with Google token")
-    void testAuthenticateWithGoogleExistingUserSuccess() {
-        String googleIdToken = "valid-google-token";
-        GoogleTokenVerifierService.GoogleUserInfo googleUserInfo =
-                new GoogleTokenVerifierService.GoogleUserInfo("operator@swiftmx.bank", "Verified Operator", "sub-12345");
+    @DisplayName("Should successfully register a new user with hashed password and issue JWT")
+    void testRegisterSuccess() {
+        com.swiftmx.app.dto.RegisterRequest request =
+                new com.swiftmx.app.dto.RegisterRequest("Jane Doe", "jane.doe@swiftmx.bank", "securePassword123");
 
-        when(googleTokenVerifierService.verify(googleIdToken)).thenReturn(googleUserInfo);
-        when(userRepository.findByEmail("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
-        when(jwtTokenProvider.generateToken("operator@swiftmx.bank", "OPERATOR")).thenReturn("mock-jwt-token");
+        when(userRepository.existsByEmail("jane.doe@swiftmx.bank")).thenReturn(false);
+        when(passwordEncoder.encode("securePassword123")).thenReturn("$2a$10$hashedSecurePassword");
 
-        LoginResponse response = authService.authenticateWithGoogle(googleIdToken);
-
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("operator@swiftmx.bank", response.getEmail());
-        assertEquals("mock-jwt-token", response.getToken());
-        assertEquals("OPERATOR", response.getRole());
-    }
-
-    @Test
-    @DisplayName("Should successfully create new user and authenticate with Google token")
-    void testAuthenticateWithGoogleNewUserSuccess() {
-        String googleIdToken = "new-user-google-token";
-        GoogleTokenVerifierService.GoogleUserInfo googleUserInfo =
-                new GoogleTokenVerifierService.GoogleUserInfo("newtester@gmail.com", "New Tester", "sub-67890");
-
-        when(googleTokenVerifierService.verify(googleIdToken)).thenReturn(googleUserInfo);
-        when(userRepository.findByEmail("newtester@gmail.com")).thenReturn(Optional.empty());
-        when(userRepository.existsByUsername("newtester@gmail.com")).thenReturn(false);
-        when(passwordEncoder.encode(anyString())).thenReturn("$2a$10$generatedHash");
-
-        User savedUser = new User("newtester@gmail.com", "newtester@gmail.com", "$2a$10$generatedHash", "New Tester", "OPERATOR");
+        User savedUser = new User("jane.doe@swiftmx.bank", "jane.doe@swiftmx.bank", "$2a$10$hashedSecurePassword", "Jane Doe", "OPERATOR");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
-        when(jwtTokenProvider.generateToken("newtester@gmail.com", "OPERATOR")).thenReturn("new-user-jwt-token");
+        when(jwtTokenProvider.generateToken("jane.doe@swiftmx.bank", "OPERATOR")).thenReturn("jwt-register-token");
 
-        LoginResponse response = authService.authenticateWithGoogle(googleIdToken);
+        LoginResponse response = authService.register(request);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
-        assertEquals("newtester@gmail.com", response.getEmail());
-        assertEquals("new-user-jwt-token", response.getToken());
+        assertEquals("jane.doe@swiftmx.bank", response.getEmail());
+        assertEquals("Jane Doe", response.getFullName());
+        assertEquals("jwt-register-token", response.getToken());
         assertEquals("OPERATOR", response.getRole());
+        verify(passwordEncoder).encode("securePassword123");
         verify(userRepository).save(any(User.class));
     }
 
     @Test
-    @DisplayName("Should throw BadCredentialsException when Google token is invalid")
-    void testAuthenticateWithGoogleInvalidToken() {
-        String invalidToken = "invalid-token";
-        when(googleTokenVerifierService.verify(invalidToken))
-                .thenThrow(new BadCredentialsException("Invalid or expired Google authentication token"));
+    @DisplayName("Should throw DuplicateEmailException when registering an already registered email")
+    void testRegisterFailsWithDuplicateEmail() {
+        com.swiftmx.app.dto.RegisterRequest request =
+                new com.swiftmx.app.dto.RegisterRequest("Existing User", "operator@swiftmx.bank", "password123");
 
-        assertThrows(BadCredentialsException.class, () -> authService.authenticateWithGoogle(invalidToken));
+        when(userRepository.existsByEmail("operator@swiftmx.bank")).thenReturn(true);
+
+        assertThrows(com.swiftmx.app.exception.DuplicateEmailException.class, () -> authService.register(request));
+        verify(userRepository, never()).save(any(User.class));
     }
 }
