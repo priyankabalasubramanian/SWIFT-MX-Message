@@ -3,7 +3,19 @@
  * Handles JWT token storage, request authorization headers, and error parsing.
  */
 
-const API_BASE_URL = 'http://localhost:8080/api';
+/**
+ * Resolves the backend API base URL from Vite environment variable VITE_API_BASE_URL.
+ * Falls back to 'http://localhost:8080' for local development.
+ * Normalizes trailing slashes and ensures the '/api' context path is present.
+ */
+function resolveApiBaseUrl() {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  const rawUrl = (typeof envUrl === 'string' && envUrl.trim()) ? envUrl.trim() : 'http://localhost:8080';
+  const cleanUrl = rawUrl.replace(/\/+$/, '');
+  return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 const TOKEN_KEY = 'swift_mx_jwt_token';
 const USER_KEY = 'swift_mx_user';
 
@@ -54,7 +66,7 @@ async function apiRequest(endpoint, options = {}) {
     return data;
   } catch (err) {
     if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-      throw new Error('Unable to connect to the backend server. Please verify the Spring Boot service is running on port 8080.');
+      throw new Error(`Unable to connect to the backend server at ${API_BASE_URL}. Please verify the service is running and CORS allows this origin.`);
     }
     throw err;
   }

@@ -20,7 +20,7 @@ function MessageInquiry({ onNavigateToCreation, onSignOut, operatorId = 'OP-8492
       const data = await api.getMessages();
       setMessages(data || []);
     } catch (err) {
-      setApiError(err.message || 'Unable to connect to the backend server. Please verify the Spring Boot service is running on port 8080.');
+      setApiError(err.message || 'Unable to connect to the backend server. Please verify the service is running.');
       setMessages([]);
     } finally {
       setIsLoading(false);
