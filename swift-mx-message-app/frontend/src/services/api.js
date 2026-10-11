@@ -92,6 +92,23 @@ export const api = {
     return res;
   },
 
+  googleLogin: async (idToken) => {
+    const res = await apiRequest('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ idToken })
+    });
+    if (res && res.token) {
+      authStorage.setToken(res.token);
+      authStorage.setUser({
+        email: res.email || res.username,
+        username: res.username || res.email,
+        fullName: res.fullName,
+        role: res.role
+      });
+    }
+    return res;
+  },
+
   logout: async () => {
     try {
       await apiRequest('/auth/logout', { method: 'POST' });
