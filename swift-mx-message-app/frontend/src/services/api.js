@@ -91,8 +91,18 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 export const api = {
+  // Pre-warm backend connection and DNS/TLS handshake
+  ping: async () => {
+    try {
+      await fetch(`${API_BASE_URL}/health`, { method: 'GET', keepalive: true }).catch(() => null);
+    } catch {
+      // Ignore background warmup errors
+    }
+  },
+
   // Authentication
   login: async (email, password) => {
+    authStorage.clear();
     const normalizedEmail = email ? email.trim().toLowerCase() : '';
     const res = await apiRequest('/auth/login', {
       method: 'POST',

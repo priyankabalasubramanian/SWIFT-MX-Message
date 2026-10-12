@@ -28,7 +28,9 @@ public class AuthService {
 
     public LoginResponse authenticate(LoginRequest request) {
         String identifier = request.getEmail() != null ? request.getEmail().trim().toLowerCase(java.util.Locale.ROOT) : "";
-        User user = userRepository.findByEmailIgnoreCase(identifier)
+        User user = userRepository.findByEmail(identifier)
+                .or(() -> userRepository.findByUsername(identifier))
+                .or(() -> userRepository.findByEmailIgnoreCase(identifier))
                 .or(() -> userRepository.findByUsernameIgnoreCase(identifier))
                 .orElseThrow(() -> new BadCredentialsException("Invalid email address or password"));
 

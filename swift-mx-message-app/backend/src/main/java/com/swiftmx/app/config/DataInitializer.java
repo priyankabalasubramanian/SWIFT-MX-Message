@@ -33,6 +33,14 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // Pre-warm cryptographic hashing engine, SecureRandom entropy, and JPA query cache on startup
+        try {
+            passwordEncoder.matches("warmup", "$2a$10$wEkgm05cQkEwG8WzC1P7h.O7I5QW3J9GqN5Gk5B5l5V5B5l5V5B5l");
+            userRepository.findByEmail("operator@swiftmx.bank");
+        } catch (Exception ignored) {
+            // Warm-up completed
+        }
+
         // Seed default development users with email credentials if not present
         if (!userRepository.existsByEmailIgnoreCase("operator@swiftmx.bank")) {
             User operator = new User(

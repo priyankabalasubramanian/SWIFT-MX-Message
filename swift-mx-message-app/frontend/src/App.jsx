@@ -8,7 +8,7 @@ import './App.css';
 function App() {
   const [currentView, setCurrentView] = useState(() => {
     if (!authStorage.getToken()) return 'login';
-    return window.history.state?.view || 'create-message';
+    return window.history.state?.view === 'inquiry' ? 'inquiry' : 'create-message';
   });
   const [operatorId, setOperatorId] = useState(() => {
     const user = authStorage.getUser();
@@ -16,22 +16,26 @@ function App() {
   });
 
   useEffect(() => {
-    if (!window.history.state || !window.history.state.view) {
+    if (!authStorage.getToken()) {
+      window.history.replaceState({ view: 'login' }, '');
+    } else if (!window.history.state?.view) {
       window.history.replaceState({ view: currentView }, '');
     }
 
     const handlePopState = (event) => {
-      const targetView = event.state?.view || (authStorage.getToken() ? 'create-message' : 'login');
-      if (targetView !== 'login' && !authStorage.getToken()) {
+      const targetView = event.state?.view;
+      if (!authStorage.getToken()) {
         setCurrentView('login');
-      } else {
+      } else if (targetView && targetView !== 'login') {
         setCurrentView(targetView);
+      } else {
+        setCurrentView('create-message');
       }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [currentView]);
+  }, []);
 
   const navigateTo = (view) => {
     if (view !== 'login' && !authStorage.getToken()) {
@@ -45,12 +49,14 @@ function App() {
 
   const handleLoginSuccess = (user) => {
     setOperatorId(user || 'operator@swiftmx.bank');
-    navigateTo('create-message');
+    window.history.replaceState({ view: 'create-message' }, '');
+    setCurrentView('create-message');
   };
 
   const handleSignOut = () => {
     authStorage.clear();
-    navigateTo('login');
+    window.history.replaceState({ view: 'login' }, '');
+    setCurrentView('login');
   };
 
   const isAuthenticated = Boolean(authStorage.getToken());

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginPage.css';
 import bankingHeroImg from '../assets/banking-hero.jpg';
 import { api } from '../services/api.js';
@@ -16,6 +16,11 @@ function LoginPage({ onLoginSuccess }) {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Silently pre-warm backend server connection (DNS, TLS, wake-up) so initial login has zero connection latency
+    api.ping();
+  }, []);
 
   const switchMode = (newMode) => {
     setMode(newMode);
