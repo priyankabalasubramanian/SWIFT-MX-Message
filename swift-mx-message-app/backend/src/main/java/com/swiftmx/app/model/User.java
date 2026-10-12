@@ -2,9 +2,15 @@ package com.swiftmx.app.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_users_email", columnNames = {"email"})
+}, indexes = {
+    @Index(name = "idx_users_email", columnList = "email"),
+    @Index(name = "idx_users_username", columnList = "username")
+})
 public class User {
 
     @Id
@@ -14,7 +20,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(length = 50)
+    @Column(length = 100)
     private String username;
 
     @Column(name = "password_hash", nullable = false)
@@ -35,29 +41,43 @@ public class User {
     public User() {}
 
     public User(String email, String passwordHash, String fullName, String role) {
-        this.email = email;
-        this.username = email;
+        this.email = normalizeEmail(email);
+        this.username = this.email;
         this.passwordHash = passwordHash;
-        this.fullName = fullName;
+        this.fullName = fullName != null ? fullName.trim() : "";
         this.role = role;
     }
 
     public User(String email, String username, String passwordHash, String fullName, String role) {
-        this.email = email;
-        this.username = username;
+        this.email = normalizeEmail(email);
+        this.username = username != null ? username.trim() : this.email;
         this.passwordHash = passwordHash;
-        this.fullName = fullName;
+        this.fullName = fullName != null ? fullName.trim() : "";
         this.role = role;
+    }
+
+    private static String normalizeEmail(String rawEmail) {
+        return rawEmail != null ? rawEmail.trim().toLowerCase(Locale.ROOT) : null;
     }
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+        this.email = normalizeEmail(this.email);
+        if (this.username != null) {
+            this.username = this.username.trim();
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
         this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
+        this.email = normalizeEmail(this.email);
+        if (this.username != null) {
+            this.username = this.username.trim();
+        }
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -66,16 +86,16 @@ public class User {
     public void setId(Long id) { this.id = id; }
 
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) { this.email = normalizeEmail(email); }
 
     public String getUsername() { return username != null ? username : email; }
-    public void setUsername(String username) { this.username = username; }
+    public void setUsername(String username) { this.username = username != null ? username.trim() : null; }
 
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
     public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName != null ? fullName.trim() : null; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }

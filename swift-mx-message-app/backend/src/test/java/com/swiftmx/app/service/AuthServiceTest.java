@@ -55,7 +55,7 @@ class AuthServiceTest {
     void testAuthenticateSuccessWithEmail() {
         LoginRequest request = new LoginRequest("operator@swiftmx.bank", "password123");
 
-        when(userRepository.findByEmail("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
+        when(userRepository.findByEmailIgnoreCase("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
         when(passwordEncoder.matches("password123", "$2a$10$encodedPasswordHash")).thenReturn(true);
         when(jwtTokenProvider.generateToken("operator@swiftmx.bank", "OPERATOR")).thenReturn("mock-jwt-token");
 
@@ -69,12 +69,28 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Should successfully authenticate user with mixed-case and padded email")
+    void testAuthenticateSuccessWithMixedCaseEmail() {
+        LoginRequest request = new LoginRequest("  OPERATOR@SWIFTMX.BANK  ", "password123");
+
+        when(userRepository.findByEmailIgnoreCase("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
+        when(passwordEncoder.matches("password123", "$2a$10$encodedPasswordHash")).thenReturn(true);
+        when(jwtTokenProvider.generateToken("operator@swiftmx.bank", "OPERATOR")).thenReturn("mock-jwt-token");
+
+        LoginResponse response = authService.authenticate(request);
+
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertEquals("operator@swiftmx.bank", response.getEmail());
+    }
+
+    @Test
     @DisplayName("Should throw BadCredentialsException when email is not found")
     void testAuthenticateFailsWithNonexistentEmail() {
         LoginRequest request = new LoginRequest("unknown@swiftmx.bank", "password123");
 
-        when(userRepository.findByEmail("unknown@swiftmx.bank")).thenReturn(Optional.empty());
-        when(userRepository.findByUsername("unknown@swiftmx.bank")).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase("unknown@swiftmx.bank")).thenReturn(Optional.empty());
+        when(userRepository.findByUsernameIgnoreCase("unknown@swiftmx.bank")).thenReturn(Optional.empty());
 
         assertThrows(BadCredentialsException.class, () -> authService.authenticate(request));
     }
@@ -84,7 +100,7 @@ class AuthServiceTest {
     void testAuthenticateFailsWithWrongPassword() {
         LoginRequest request = new LoginRequest("operator@swiftmx.bank", "wrongPassword");
 
-        when(userRepository.findByEmail("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
+        when(userRepository.findByEmailIgnoreCase("operator@swiftmx.bank")).thenReturn(Optional.of(sampleUser));
         when(passwordEncoder.matches("wrongPassword", "$2a$10$encodedPasswordHash")).thenReturn(false);
 
         assertThrows(BadCredentialsException.class, () -> authService.authenticate(request));
@@ -96,7 +112,7 @@ class AuthServiceTest {
         com.swiftmx.app.dto.RegisterRequest request =
                 new com.swiftmx.app.dto.RegisterRequest("Jane Doe", "jane.doe@swiftmx.bank", "securePassword123");
 
-        when(userRepository.existsByEmail("jane.doe@swiftmx.bank")).thenReturn(false);
+        when(userRepository.existsByEmailIgnoreCase("jane.doe@swiftmx.bank")).thenReturn(false);
         when(passwordEncoder.encode("securePassword123")).thenReturn("$2a$10$hashedSecurePassword");
 
         User savedUser = new User("jane.doe@swiftmx.bank", "jane.doe@swiftmx.bank", "$2a$10$hashedSecurePassword", "Jane Doe", "OPERATOR");
@@ -121,9 +137,23 @@ class AuthServiceTest {
         com.swiftmx.app.dto.RegisterRequest request =
                 new com.swiftmx.app.dto.RegisterRequest("Existing User", "operator@swiftmx.bank", "password123");
 
-        when(userRepository.existsByEmail("operator@swiftmx.bank")).thenReturn(true);
+        when(userRepository.existsByEmailIgnoreCase("operator@swiftmx.bank")).thenReturn(true);
 
         assertThrows(com.swiftmx.app.exception.DuplicateEmailException.class, () -> authService.register(request));
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should throw DuplicateEmailException when database unique constraint violation occurs")
+    void testRegisterFailsWithDataIntegrityViolation() {
+        com.swiftmx.app.dto.RegisterRequest request =
+                new com.swiftmx.app.dto.RegisterRequest("Concurrent User", "concurrent@swiftmx.bank", "password123");
+
+        when(userRepository.existsByEmailIgnoreCase("concurrent@swiftmx.bank")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("$2a$10$hashed");
+        when(userRepository.save(any(User.class)))
+                .thenThrow(new org.springframework.dao.DataIntegrityViolationException("Unique index violation"));
+
+        assertThrows(com.swiftmx.app.exception.DuplicateEmailException.class, () -> authService.register(request));
     }
 }

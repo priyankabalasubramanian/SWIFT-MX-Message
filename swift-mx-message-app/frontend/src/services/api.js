@@ -75,16 +75,16 @@ async function apiRequest(endpoint, options = {}) {
 export const api = {
   // Authentication
   login: async (email, password) => {
-    const trimmedEmail = email ? email.trim() : '';
+    const normalizedEmail = email ? email.trim().toLowerCase() : '';
     const res = await apiRequest('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email: trimmedEmail, username: trimmedEmail, password })
+      body: JSON.stringify({ email: normalizedEmail, username: normalizedEmail, password })
     });
     if (res && res.token) {
       authStorage.setToken(res.token);
       authStorage.setUser({
-        email: res.email || res.username || trimmedEmail,
-        username: res.username || res.email || trimmedEmail,
+        email: res.email || res.username || normalizedEmail,
+        username: res.username || res.email || normalizedEmail,
         fullName: res.fullName,
         role: res.role
       });
@@ -93,17 +93,17 @@ export const api = {
   },
 
   register: async (fullName, email, password) => {
-    const trimmedEmail = email ? email.trim() : '';
+    const normalizedEmail = email ? email.trim().toLowerCase() : '';
     const trimmedName = fullName ? fullName.trim() : '';
     const res = await apiRequest('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ fullName: trimmedName, email: trimmedEmail, password })
+      body: JSON.stringify({ fullName: trimmedName, email: normalizedEmail, password })
     });
     if (res && res.token) {
       authStorage.setToken(res.token);
       authStorage.setUser({
-        email: res.email || trimmedEmail,
-        username: res.username || res.email || trimmedEmail,
+        email: res.email || normalizedEmail,
+        username: res.username || res.email || normalizedEmail,
         fullName: res.fullName || trimmedName,
         role: res.role
       });

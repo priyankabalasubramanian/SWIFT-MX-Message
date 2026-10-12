@@ -22,8 +22,8 @@ public class RegisterRequest {
     public RegisterRequest() {}
 
     public RegisterRequest(String fullName, String email, String password) {
-        this.fullName = fullName;
-        this.email = email;
+        this.fullName = fullName != null ? fullName.trim() : null;
+        this.email = email != null ? email.trim().toLowerCase(java.util.Locale.ROOT) : null;
         this.password = password;
     }
 
@@ -32,15 +32,15 @@ public class RegisterRequest {
     }
 
     public void setFullName(String fullName) {
-        this.fullName = fullName;
+        this.fullName = fullName != null ? fullName.trim() : null;
     }
 
     public String getEmail() {
-        return email;
+        return email != null ? email.trim().toLowerCase(java.util.Locale.ROOT) : null;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email != null ? email.trim().toLowerCase(java.util.Locale.ROOT) : null;
     }
 
     public String getPassword() {

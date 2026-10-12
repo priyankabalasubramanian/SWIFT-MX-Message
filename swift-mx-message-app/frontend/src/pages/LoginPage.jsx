@@ -111,15 +111,17 @@ function LoginPage({ onLoginSuccess }) {
     setErrors({});
     setIsLoading(true);
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     try {
       if (mode === 'login') {
-        const res = await api.login(email.trim(), password);
+        const res = await api.login(normalizedEmail, password);
         setIsAuthenticated(true);
         if (onLoginSuccess) {
-          onLoginSuccess(res.fullName || res.email || res.username || email.trim());
+          onLoginSuccess(res.fullName || res.email || res.username || normalizedEmail);
         }
       } else {
-        const res = await api.register(fullName.trim(), email.trim(), password);
+        const res = await api.register(fullName.trim(), normalizedEmail, password);
         setSuccessMessage('Account created successfully! Session initiated.');
         setIsAuthenticated(true);
         if (onLoginSuccess) {

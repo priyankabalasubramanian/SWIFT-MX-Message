@@ -20,6 +20,9 @@ RUN mkdir -p /app/data
 COPY --from=build /app/target/swift-mx-backend-*.jar app.jar
 
 # Render environment defaults
+# For persistent production on Render: attach a Render PostgreSQL database (DATABASE_URL)
+# or set SPRING_PROFILES_ACTIVE=postgres with DB_HOST/DB_USERNAME/DB_PASSWORD.
+# Falls back to h2 for zero-config standalone container runs.
 ENV PORT=8080
 ENV SPRING_PROFILES_ACTIVE=h2
 

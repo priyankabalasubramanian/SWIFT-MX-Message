@@ -62,7 +62,8 @@ public class Message {
     private String remittanceInfo;
 
     @Lob
-    @Column(name = "generated_xml", nullable = false, columnDefinition = "LONGTEXT")
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.LONGVARCHAR)
+    @Column(name = "generated_xml", nullable = false)
     private String generatedXml;
 
     @Column(nullable = false, length = 30)

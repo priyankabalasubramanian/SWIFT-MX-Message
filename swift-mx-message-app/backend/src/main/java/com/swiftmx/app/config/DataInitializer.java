@@ -34,7 +34,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // Seed default development users with email credentials if not present
-        if (!userRepository.existsByEmail("operator@swiftmx.bank")) {
+        if (!userRepository.existsByEmailIgnoreCase("operator@swiftmx.bank")) {
             User operator = new User(
                 "operator@swiftmx.bank",
                 "OP-84920",
@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(operator);
         }
 
-        if (!userRepository.existsByEmail("admin@swiftmx.bank")) {
+        if (!userRepository.existsByEmailIgnoreCase("admin@swiftmx.bank")) {
             User admin = new User(
                 "admin@swiftmx.bank",
                 "admin",

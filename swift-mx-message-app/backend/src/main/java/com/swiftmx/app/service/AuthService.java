@@ -27,9 +27,9 @@ public class AuthService {
     }
 
     public LoginResponse authenticate(LoginRequest request) {
-        String identifier = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
-        User user = userRepository.findByEmail(identifier)
-                .or(() -> userRepository.findByUsername(identifier))
+        String identifier = request.getEmail() != null ? request.getEmail().trim().toLowerCase(java.util.Locale.ROOT) : "";
+        User user = userRepository.findByEmailIgnoreCase(identifier)
+                .or(() -> userRepository.findByUsernameIgnoreCase(identifier))
                 .orElseThrow(() -> new BadCredentialsException("Invalid email address or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
@@ -50,9 +50,13 @@ public class AuthService {
     }
 
     public LoginResponse register(RegisterRequest request) {
-        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
+        String email = request.getEmail() != null ? request.getEmail().trim().toLowerCase(java.util.Locale.ROOT) : "";
 
-        if (userRepository.existsByEmail(email)) {
+        if (email.isBlank()) {
+            throw new IllegalArgumentException("Email address is required");
+        }
+
+        if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new DuplicateEmailException("An account with this email address already exists. Please sign in instead.");
         }
 
@@ -61,7 +65,12 @@ public class AuthService {
         String username = email;
 
         User newUser = new User(email, username, hashedPassword, fullName, "OPERATOR");
-        User savedUser = userRepository.save(newUser);
+        User savedUser;
+        try {
+            savedUser = userRepository.save(newUser);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new DuplicateEmailException("An account with this email address already exists. Please sign in instead.");
+        }
 
         String userEmail = savedUser.getEmail() != null ? savedUser.getEmail() : savedUser.getUsername();
         String token = jwtTokenProvider.generateToken(userEmail, savedUser.getRole());

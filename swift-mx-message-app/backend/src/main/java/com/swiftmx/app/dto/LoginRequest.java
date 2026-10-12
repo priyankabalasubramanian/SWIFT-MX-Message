@@ -18,30 +18,35 @@ public class LoginRequest {
     public LoginRequest() {}
 
     public LoginRequest(String email, String password) {
-        this.email = email;
-        this.username = email;
+        String normalized = email != null ? email.trim().toLowerCase(java.util.Locale.ROOT) : null;
+        this.email = normalized;
+        this.username = normalized;
         this.password = password;
     }
 
     public String getEmail() {
-        return (email != null && !email.isBlank()) ? email : username;
+        String raw = (email != null && !email.isBlank()) ? email : username;
+        return raw != null ? raw.trim().toLowerCase(java.util.Locale.ROOT) : null;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        String normalized = email != null ? email.trim().toLowerCase(java.util.Locale.ROOT) : null;
+        this.email = normalized;
         if (this.username == null) {
-            this.username = email;
+            this.username = normalized;
         }
     }
 
     public String getUsername() {
-        return (username != null && !username.isBlank()) ? username : email;
+        String raw = (username != null && !username.isBlank()) ? username : email;
+        return raw != null ? raw.trim().toLowerCase(java.util.Locale.ROOT) : null;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        String normalized = username != null ? username.trim().toLowerCase(java.util.Locale.ROOT) : null;
+        this.username = normalized;
         if (this.email == null) {
-            this.email = username;
+            this.email = normalized;
         }
     }
 
