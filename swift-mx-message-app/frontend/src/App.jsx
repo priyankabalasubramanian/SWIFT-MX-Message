@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginPage from './pages/LoginPage.jsx';
 import MessageCreation from './pages/MessageCreation.jsx';
 import MessageInquiry from './pages/MessageInquiry.jsx';
@@ -7,21 +7,46 @@ import './App.css';
 
 function App() {
   const [currentView, setCurrentView] = useState(() => {
-    return authStorage.getToken() ? 'create-message' : 'login';
+    if (!authStorage.getToken()) return 'login';
+    return window.history.state?.view || 'create-message';
   });
   const [operatorId, setOperatorId] = useState(() => {
     const user = authStorage.getUser();
     return user?.email || user?.username || 'operator@swiftmx.bank';
   });
 
+  useEffect(() => {
+    if (!window.history.state || !window.history.state.view) {
+      window.history.replaceState({ view: currentView }, '');
+    }
+
+    const handlePopState = (event) => {
+      const targetView = event.state?.view || (authStorage.getToken() ? 'create-message' : 'login');
+      if (targetView !== 'login' && !authStorage.getToken()) {
+        setCurrentView('login');
+      } else {
+        setCurrentView(targetView);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [currentView]);
+
+  const navigateTo = (view) => {
+    if (view === currentView) return;
+    window.history.pushState({ view }, '');
+    setCurrentView(view);
+  };
+
   const handleLoginSuccess = (user) => {
     setOperatorId(user || 'operator@swiftmx.bank');
-    setCurrentView('create-message');
+    navigateTo('create-message');
   };
 
   const handleSignOut = () => {
     authStorage.clear();
-    setCurrentView('login');
+    navigateTo('login');
   };
 
   return (
@@ -34,14 +59,14 @@ function App() {
         <MessageCreation
           operatorId={operatorId}
           onNavigateBack={handleSignOut}
-          onNavigateToInquiry={() => setCurrentView('inquiry')}
+          onNavigateToInquiry={() => navigateTo('inquiry')}
         />
       )}
 
       {currentView === 'inquiry' && (
         <MessageInquiry
           operatorId={operatorId}
-          onNavigateToCreation={() => setCurrentView('create-message')}
+          onNavigateToCreation={() => navigateTo('create-message')}
           onSignOut={handleSignOut}
         />
       )}
