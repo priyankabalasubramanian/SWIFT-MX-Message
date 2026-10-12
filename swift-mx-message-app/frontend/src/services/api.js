@@ -19,19 +19,37 @@ export const API_BASE_URL = resolveApiBaseUrl();
 const TOKEN_KEY = 'swift_mx_jwt_token';
 const USER_KEY = 'swift_mx_user';
 
+// Clean up any legacy persistent authentication tokens from localStorage
+try {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+} catch {
+  // Ignore environments without localStorage access
+}
+
 export const authStorage = {
-  getToken: () => localStorage.getItem(TOKEN_KEY),
-  setToken: (token) => localStorage.setItem(TOKEN_KEY, token),
-  removeToken: () => localStorage.removeItem(TOKEN_KEY),
+  getToken: () => sessionStorage.getItem(TOKEN_KEY),
+  setToken: (token) => sessionStorage.setItem(TOKEN_KEY, token),
+  removeToken: () => {
+    sessionStorage.removeItem(TOKEN_KEY);
+    try { localStorage.removeItem(TOKEN_KEY); } catch {}
+  },
   getUser: () => {
-    const raw = localStorage.getItem(USER_KEY);
+    const raw = sessionStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   },
-  setUser: (user) => localStorage.setItem(USER_KEY, JSON.stringify(user)),
-  removeUser: () => localStorage.removeItem(USER_KEY),
+  setUser: (user) => sessionStorage.setItem(USER_KEY, JSON.stringify(user)),
+  removeUser: () => {
+    sessionStorage.removeItem(USER_KEY);
+    try { localStorage.removeItem(USER_KEY); } catch {}
+  },
   clear: () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(USER_KEY);
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    } catch {}
   }
 };
 

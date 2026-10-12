@@ -34,6 +34,10 @@ function App() {
   }, [currentView]);
 
   const navigateTo = (view) => {
+    if (view !== 'login' && !authStorage.getToken()) {
+      setCurrentView('login');
+      return;
+    }
     if (view === currentView) return;
     window.history.pushState({ view }, '');
     setCurrentView(view);
@@ -49,13 +53,16 @@ function App() {
     navigateTo('login');
   };
 
+  const isAuthenticated = Boolean(authStorage.getToken());
+  const activeView = isAuthenticated ? currentView : 'login';
+
   return (
     <div className="app-root">
-      {currentView === 'login' && (
+      {activeView === 'login' && (
         <LoginPage onLoginSuccess={handleLoginSuccess} />
       )}
 
-      {currentView === 'create-message' && (
+      {activeView === 'create-message' && (
         <MessageCreation
           operatorId={operatorId}
           onNavigateBack={handleSignOut}
@@ -63,7 +70,7 @@ function App() {
         />
       )}
 
-      {currentView === 'inquiry' && (
+      {activeView === 'inquiry' && (
         <MessageInquiry
           operatorId={operatorId}
           onNavigateToCreation={() => navigateTo('create-message')}
